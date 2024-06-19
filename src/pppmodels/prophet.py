@@ -3,7 +3,9 @@ import pandas as pd
 import pymc as pm
 import pytensor.tensor as at
 
-class PoissonPointProcess:
+class Prophetoid:
+    """Model inspired by Facebook's Prophet."""
+
     def __init__(self, data, date_col, target_col, group_cols, fourier_order=1):
         self.data = data.copy()
         self.date_col = date_col
@@ -108,7 +110,7 @@ data = pd.DataFrame({
 })
 
 # Instantiate and use the model with Fourier series order 2
-model = PoissonPointProcess(data=data, date_col='date', target_col='target', group_cols=['group1', 'group2'], fourier_order=2)
+model = Prophetoid(data=data, date_col='date', target_col='target', group_cols=['group1', 'group2'], fourier_order=2)
 model.build_model()
 model.fit()
 
