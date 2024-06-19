@@ -73,11 +73,6 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#generate-example-data-with-seasonal-weekday-and-group-effects" class="md-skip">
-          Skip to content
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -361,8 +356,6 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
-      
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -395,8 +388,6 @@
   
   
   
-    
-  
   
 </nav>
                   </div>
@@ -414,43 +405,9 @@
   
 
 
-<p>```python
-from pppmodels import Prophetoid
-import numpy as np
-import pandas as pd</p>
-<h1 id="generate-example-data-with-seasonal-weekday-and-group-effects">Generate example data with seasonal, weekday, and group effects</h1>
-<p>np.random.seed(42)
-date_rng = pd.date_range(start='2023-01-01', end='2023-01-31', freq='D')
-n = len(date_rng)</p>
-<h1 id="seasonal-effects">Seasonal effects</h1>
-<p>t = np.arange(n)
-cos_term_1 = np.cos(2 * np.pi * t / 365.24)
-sin_term_1 = np.sin(2 * np.pi * t / 365.24)
-cos_term_2 = np.cos(4 * 2 * np.pi * t / 365.24)  # Second order
-sin_term_2 = np.sin(4 * 2 * np.pi * t / 365.24)  # Second order</p>
-<h1 id="weekday-effects">Weekday effects</h1>
-<p>weekday = date_rng.dayofweek</p>
-<h1 id="group-effects">Group effects</h1>
-<p>group1 = np.random.choice(['A', 'B'], size=n)
-group2 = np.random.choice(['X', 'Y'], size=n)</p>
-<p>data = pd.DataFrame({
-    'date': date_rng,
-    'group1': group1,
-    'group2': group2,
-    'weekday': weekday,
-    'target': np.random.poisson(lam=np.exp(0.5 + 0.3 * cos_term_1 + 0.2 * sin_term_1 + 0.1 * cos_term_2 + 0.1 * sin_term_2
-                                          + 0.2 * (weekday - 3)**2 + 0.5 * (group1 == 'A') - 0.5 * (group2 == 'Y')), size=n)
-})</p>
-<h1 id="instantiate-and-use-the-model-with-fourier-series-order-2">Instantiate and use the model with Fourier series order 2</h1>
-<p>model = Prophetoid(data=data, date_col='date', target_col='target', group_cols=['group1', 'group2'], fourier_order=2)
-model.build_model()
-model.fit()</p>
-<h1 id="get-the-trace-and-print-summary">Get the trace and print summary</h1>
-<p>trace = model.get_trace()
-print(pm.summary(trace))</p>
-<p>import arviz as az</p>
-<p>print(az.loo(trace))
-``</p>
+  <h1>Examples</h1>
+
+
 
 
 
