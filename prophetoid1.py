@@ -4,6 +4,7 @@ markdown.Markdown(extensions=['pymdownx.snippets'])
 
 # --8<-- [start:func]
 from pppmodels import Prophetoid
+import pymc as pm
 import numpy as np
 import pandas as pd
 
