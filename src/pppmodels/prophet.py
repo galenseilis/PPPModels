@@ -80,3 +80,4 @@ class Prophetoid:
 
     def get_trace(self):
         return self.trace
+
