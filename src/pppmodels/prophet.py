@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import pymc as pm
-import pytensor.tensor as at
 
 
 class Prophetoid:
@@ -88,3 +87,30 @@ class Prophetoid:
 
     def get_trace(self):
         return self.trace
+
+    def predict(self, dates):
+        # Prepare features for the given dates
+        dates_df = pd.DataFrame({self.date_col: dates})
+        dates_df[self.date_col] = pd.to_datetime(dates_df[self.date_col])
+        dates_df["weekday"] = dates_df[self.date_col].dt.dayofweek
+
+        t = (
+            dates_df[self.date_col] - self.data[self.date_col].min()
+        ).dt.total_seconds() / (24 * 3600)
+
+        # Compute Fourier series terms
+        fourier_terms = np.zeros((len(dates_df), 2 * self.fourier_order))
+        for k in range(1, self.fourier_order + 1):
+            fourier_terms[:, 2 * k - 2] = np.cos(2 * np.pi * k * t / 365.24)
+            fourier_terms[:, 2 * k - 1] = np.sin(2 * np.pi * k * t / 365.24)
+
+        # Use pymc.sample_posterior_predictive to generate posterior predictive samples
+        with self.model:
+            posterior_pred = pm.sample_posterior_predictive(
+                trace=self.trace,
+                var_names=["observed"],
+                random_seed=2018,
+                predictions=True
+            ).predictions
+
+        return posterior_pred
