@@ -42,6 +42,8 @@ logical-unification==0.4.6
     # via cons
     # via minikanren
     # via pytensor
+markdown==3.6
+    # via pymdown-extensions
 markdown-it-py==3.0.0
     # via rich
 matplotlib==3.9.0
@@ -80,6 +82,7 @@ pygments==2.18.0
     # via rich
 pymc==5.16.1
     # via pppmodels
+pymdown-extensions==10.8.1
 pyparsing==3.1.2
     # via matplotlib
 pytensor==2.23.0
@@ -89,6 +92,8 @@ python-dateutil==2.9.0.post0
     # via pandas
 pytz==2024.1
     # via pandas
+pyyaml==6.0.1
+    # via pymdown-extensions
 rich==13.7.1
     # via pymc
 scipy==1.14.0

@@ -3,6 +3,7 @@ import pandas as pd
 import pymc as pm
 import pytensor.tensor as at
 
+
 class Prophetoid:
     """Model inspired by Facebook's Prophet."""
 
@@ -19,14 +20,16 @@ class Prophetoid:
         self.data[self.date_col] = pd.to_datetime(self.data[self.date_col])
 
         # Extracting the day of the week
-        self.data['weekday'] = self.data[self.date_col].dt.dayofweek
+        self.data["weekday"] = self.data[self.date_col].dt.dayofweek
 
         # Creating Fourier series terms for seasonality (365.24-day period)
-        t = (self.data[self.date_col] - self.data[self.date_col].min()).dt.total_seconds() / (24 * 3600)  # time in days since start
+        t = (
+            self.data[self.date_col] - self.data[self.date_col].min()
+        ).dt.total_seconds() / (24 * 3600)  # time in days since start
 
         for k in range(1, self.fourier_order + 1):
-            self.data[f'cos_term_{k}'] = np.cos(2 * np.pi * k * t / 365.24)
-            self.data[f'sin_term_{k}'] = np.sin(2 * np.pi * k * t / 365.24)
+            self.data[f"cos_term_{k}"] = np.cos(2 * np.pi * k * t / 365.24)
+            self.data[f"sin_term_{k}"] = np.sin(2 * np.pi * k * t / 365.24)
 
     def build_model(self):
         # Prepare data
@@ -34,7 +37,7 @@ class Prophetoid:
 
         # Extract the unique categories for the groupings
         coords = {col: self.data[col].unique().tolist() for col in self.group_cols}
-        coords['weekday'] = np.arange(7).tolist()
+        coords["weekday"] = np.arange(7).tolist()
 
         with pm.Model(coords=coords) as model:
             # Priors for fixed effects
@@ -56,11 +59,11 @@ class Prophetoid:
             # Construct the linear predictor
             mu = intercept
             for k in range(1, self.fourier_order + 1):
-                X_cos = self.data[f'cos_term_{k}'].values
-                X_sin = self.data[f'sin_term_{k}'].values
+                X_cos = self.data[f"cos_term_{k}"].values
+                X_sin = self.data[f"sin_term_{k}"].values
                 mu += beta_cos[k] * X_cos + beta_sin[k] * X_sin
 
-            X_weekday = self.data['weekday'].values
+            X_weekday = self.data["weekday"].values
             mu += beta_weekday[X_weekday]
 
             for col in self.group_cols:
@@ -76,8 +79,12 @@ class Prophetoid:
 
     def fit(self, draws=1000, tune=1000):
         with self.model:
-            self.trace = pm.sample(draws=draws, tune=tune, return_inferencedata=True, idata_kwargs={"log_likelihood": True})
+            self.trace = pm.sample(
+                draws=draws,
+                tune=tune,
+                return_inferencedata=True,
+                idata_kwargs={"log_likelihood": True},
+            )
 
     def get_trace(self):
         return self.trace
-

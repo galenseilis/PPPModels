@@ -1,6 +1,6 @@
 [project]
 name = "pppmodels"
-version = "0.4.0"
+version = "0.5.0"
 description = "Add your description here"
 authors = [
     { name = "galenseilis", email = "galen.seilis@seilis.ca" }
@@ -18,7 +18,10 @@ build-backend = "hatchling.build"
 
 [tool.rye]
 managed = true
-dev-dependencies = []
+dev-dependencies = [
+    "markdown>=3.6",
+    "pymdown-extensions>=10.8.1",
+]
 
 [tool.hatch.metadata]
 allow-direct-references = true
